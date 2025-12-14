@@ -1,7 +1,7 @@
 /*
   UPDATED INDEX PAGE
   ==================
-  Now includes Chat, Pomodoro Timer, Assignment Tracker, and Canvas Settings
+  Now includes Chat, Pomodoro Timer, Assignment Tracker, Canvas, AI Tools, and Smart Chat Sidebar
 */
 
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { PomodoroTimer } from '@/components/pomodoro/PomodoroTimer';
 import { AssignmentTracker } from '@/components/assignments/AssignmentTracker';
 import { CanvasDashboard } from '@/components/canvas/CanvasDashboard';
 import { AIStudyHub } from '@/components/ai-study/AIStudyHub';
+import { SmartChatSidebar, SmartChatToggle } from '@/components/chat/SmartChatSidebar';
 import { Helmet } from 'react-helmet-async';
 import { MessageSquare, Timer, Sparkles, ClipboardList, Settings, Brain } from 'lucide-react';
 
@@ -17,6 +18,7 @@ type TabType = 'timer' | 'assignments' | 'chat' | 'canvas' | 'ai-tools';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('assignments');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <>
@@ -131,6 +133,10 @@ const Index = () => {
             </div>
           )}
         </main>
+
+        {/* Smart Chat Floating Button & Sidebar */}
+        <SmartChatToggle onClick={() => setIsChatOpen(true)} />
+        <SmartChatSidebar isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       </div>
     </>
   );

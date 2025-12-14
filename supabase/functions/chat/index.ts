@@ -1,61 +1,64 @@
 /*
-  CHAT EDGE FUNCTION
-  ==================
-  This is the backend code that talks to the AI!
+  SMART CHAT EDGE FUNCTION
+  ========================
+  Enhanced chat with context awareness for study assistance.
   
-  Edge functions run on the server (not in the browser), which is important
-  because we need to keep our API key secret. Never expose API keys in frontend code!
-  
-  How it works:
-  1. Receives messages from the frontend
-  2. Sends them to the AI (Gemini via Lovable AI Gateway)
-  3. Returns the AI's response
-  
-  This function uses Lovable AI Gateway, which provides Gemini AI models.
+  This function:
+  1. Receives messages and optional context (Canvas data, assignments, grades)
+  2. Builds a contextual prompt with student information
+  3. Sends to Lovable AI Gateway (Gemini)
+  4. Returns personalized responses
 */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// CORS headers allow our frontend to call this function
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests (browsers send these before actual requests)
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Get the messages from the request body
-    const { messages } = await req.json();
+    const { messages, context, isSmartChat } = await req.json();
 
-    // Get the API key from environment variables (stored securely)
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    // Log for debugging (you can see this in the Edge Function logs)
-    console.log("Received chat request with", messages.length, "messages");
+    console.log("Smart chat request:", { 
+      messageCount: messages.length, 
+      hasContext: !!context,
+      isSmartChat 
+    });
 
-    // Call the Lovable AI Gateway (which uses Gemini under the hood!)
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // Using Gemini 2.5 Flash - fast and smart!
-        model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: `You are Study Buddy AI, a friendly and helpful AI assistant designed for high school students. 
+    // Build system prompt based on whether we have context
+    const systemPrompt = isSmartChat && context ? `You are Study Buddy AI, an intelligent study assistant for high school students.
+
+IMPORTANT INSTRUCTIONS:
+- You have access to the student's Canvas LMS data below
+- When asked about assignments, grades, or courses, USE THIS DATA to give specific, accurate answers
+- Be encouraging, friendly, and use emojis occasionally 📚✨
+- Give practical, actionable advice
+- When suggesting what to work on, consider due dates, points, and difficulty
+- If asked about specific assignments or grades, cite the data you have
+- Keep responses concise but helpful
+
+${context}
+
+RESPONSE GUIDELINES:
+- For "what's due" questions: List specific assignments with dates and courses
+- For "what should I work on" questions: Prioritize by urgency and importance
+- For grade questions: Reference specific courses and percentages
+- For study help: Be encouraging and provide clear explanations
+- For flashcard/quiz requests: Create interactive content
+- Always be supportive and motivating!` 
+    : `You are Study Buddy AI, a friendly and helpful AI assistant designed for high school students. 
             
 Your personality:
 - Encouraging and supportive
@@ -73,8 +76,18 @@ Your capabilities:
 - Answer general knowledge questions
 - Encourage good study habits
 
-Remember: You're talking to teenagers, so be relatable but always respectful and educational!`
-          },
+Remember: You're talking to teenagers, so be relatable but always respectful and educational!`;
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
           ...messages,
         ],
       }),

@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.motivate]
 verify_jwt = false
+
+[functions.canvas]
+verify_jwt = false

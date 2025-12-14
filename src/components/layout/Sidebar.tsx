@@ -7,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import {
   Home, BookOpen, CheckSquare, FileText, Database, Timer, Bot, Settings,
   ChevronRight, ChevronDown, PanelLeftClose, PanelLeft, Sparkles, Plus,
-  CalendarDays, Trophy, FolderOpen, BookMarked, Layers
+  CalendarDays, Trophy, FolderOpen, BookMarked, Layers, HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,6 +57,7 @@ const navItems: NavItem[] = [
   },
   { label: 'Study Timer', icon: Timer, path: '/timer' },
   { label: 'AI Assistant', icon: Bot, path: '/ai' },
+  { label: 'Help', icon: HelpCircle, path: '/help' },
   { label: 'Settings', icon: Settings, path: '/settings' },
 ];
 

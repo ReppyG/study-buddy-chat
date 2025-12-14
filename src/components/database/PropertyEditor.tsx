@@ -191,7 +191,7 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
                           <SelectItem key={color} value={color}>
                             <div className={cn('w-4 h-4 rounded', color)} />
                           </SelectItem>
-                        )))}
+                        ))}
                       </SelectContent>
                     </Select>
                     <Button
@@ -204,6 +204,7 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
                     </Button>
                   </div>
                 ))}
+
 
                 <div className="flex items-center gap-2">
                   <Input

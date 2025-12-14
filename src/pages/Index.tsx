@@ -12,10 +12,11 @@ import { CanvasDashboard } from '@/components/canvas/CanvasDashboard';
 import { AIStudyHub } from '@/components/ai-study/AIStudyHub';
 import { SmartChatSidebar, SmartChatToggle } from '@/components/chat/SmartChatSidebar';
 import { NotesApp } from '@/components/notes/NotesApp';
+import { DatabaseApp } from '@/components/database/DatabaseApp';
 import { Helmet } from 'react-helmet-async';
-import { MessageSquare, Timer, Sparkles, ClipboardList, Settings, Brain, FileText } from 'lucide-react';
+import { MessageSquare, Timer, Sparkles, ClipboardList, Settings, Brain, FileText, Database } from 'lucide-react';
 
-type TabType = 'timer' | 'assignments' | 'chat' | 'canvas' | 'ai-tools' | 'notes';
+type TabType = 'timer' | 'assignments' | 'chat' | 'canvas' | 'ai-tools' | 'notes' | 'database';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('assignments');
@@ -110,6 +111,20 @@ const Index = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('database')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
+              ${activeTab === 'database'
+                ? 'gradient-bg text-primary-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              }
+            `}
+          >
+            <Database className="w-4 h-4" />
+            <span className="hidden sm:inline">Database</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('canvas')}
             className={`
               flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
@@ -145,6 +160,11 @@ const Index = () => {
           {activeTab === 'notes' && (
             <div className="h-[calc(100vh-80px)]">
               <NotesApp />
+            </div>
+          )}
+          {activeTab === 'database' && (
+            <div className="h-[calc(100vh-80px)]">
+              <DatabaseApp />
             </div>
           )}
           {activeTab === 'canvas' && (

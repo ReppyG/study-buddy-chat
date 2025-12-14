@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { ChatContainer } from '@/components/chat/ChatContainer';
 import { PomodoroTimer } from '@/components/pomodoro/PomodoroTimer';
 import { AssignmentTracker } from '@/components/assignments/AssignmentTracker';
-import { CanvasSettings } from '@/components/canvas/CanvasSettings';
+import { CanvasDashboard } from '@/components/canvas/CanvasDashboard';
 import { Helmet } from 'react-helmet-async';
 import { MessageSquare, Timer, Sparkles, ClipboardList, Settings } from 'lucide-react';
 
@@ -106,8 +106,8 @@ const Index = () => {
           )}
           {activeTab === 'chat' && <ChatContainer />}
           {activeTab === 'settings' && (
-            <div className="container max-w-2xl mx-auto py-6 px-4">
-              <CanvasSettings />
+            <div className="container max-w-5xl mx-auto py-6 px-4">
+              <CanvasDashboard />
             </div>
           )}
         </main>

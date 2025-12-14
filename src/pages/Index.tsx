@@ -9,10 +9,11 @@ import { ChatContainer } from '@/components/chat/ChatContainer';
 import { PomodoroTimer } from '@/components/pomodoro/PomodoroTimer';
 import { AssignmentTracker } from '@/components/assignments/AssignmentTracker';
 import { CanvasDashboard } from '@/components/canvas/CanvasDashboard';
+import { AIStudyHub } from '@/components/ai-study/AIStudyHub';
 import { Helmet } from 'react-helmet-async';
-import { MessageSquare, Timer, Sparkles, ClipboardList, Settings } from 'lucide-react';
+import { MessageSquare, Timer, Sparkles, ClipboardList, Settings, Brain } from 'lucide-react';
 
-type TabType = 'timer' | 'assignments' | 'chat' | 'settings';
+type TabType = 'timer' | 'assignments' | 'chat' | 'canvas' | 'ai-tools';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('assignments');
@@ -78,10 +79,24 @@ const Index = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => setActiveTab('ai-tools')}
             className={`
               flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
-              ${activeTab === 'settings'
+              ${activeTab === 'ai-tools'
+                ? 'gradient-bg text-primary-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              }
+            `}
+          >
+            <Brain className="w-4 h-4" />
+            <span className="hidden sm:inline">AI Tools</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('canvas')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
+              ${activeTab === 'canvas'
                 ? 'gradient-bg text-primary-foreground'
                 : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }
@@ -105,7 +120,12 @@ const Index = () => {
             </div>
           )}
           {activeTab === 'chat' && <ChatContainer />}
-          {activeTab === 'settings' && (
+          {activeTab === 'ai-tools' && (
+            <div className="container max-w-5xl mx-auto py-6 px-4">
+              <AIStudyHub />
+            </div>
+          )}
+          {activeTab === 'canvas' && (
             <div className="container max-w-5xl mx-auto py-6 px-4">
               <CanvasDashboard />
             </div>

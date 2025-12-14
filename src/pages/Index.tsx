@@ -1,17 +1,18 @@
 /*
   UPDATED INDEX PAGE
   ==================
-  Now includes Chat, Pomodoro Timer, and Assignment Tracker
+  Now includes Chat, Pomodoro Timer, Assignment Tracker, and Canvas Settings
 */
 
 import { useState } from 'react';
 import { ChatContainer } from '@/components/chat/ChatContainer';
 import { PomodoroTimer } from '@/components/pomodoro/PomodoroTimer';
 import { AssignmentTracker } from '@/components/assignments/AssignmentTracker';
+import { CanvasSettings } from '@/components/canvas/CanvasSettings';
 import { Helmet } from 'react-helmet-async';
-import { MessageSquare, Timer, Sparkles, ClipboardList } from 'lucide-react';
+import { MessageSquare, Timer, Sparkles, ClipboardList, Settings } from 'lucide-react';
 
-type TabType = 'timer' | 'assignments' | 'chat';
+type TabType = 'timer' | 'assignments' | 'chat' | 'settings';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabType>('assignments');
@@ -75,6 +76,20 @@ const Index = () => {
             <MessageSquare className="w-4 h-4" />
             <span className="hidden sm:inline">AI Chat</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
+              ${activeTab === 'settings'
+                ? 'gradient-bg text-primary-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              }
+            `}
+          >
+            <Settings className="w-4 h-4" />
+            <span className="hidden sm:inline">Canvas</span>
+          </button>
         </nav>
 
         {/* Content */}
@@ -90,6 +105,11 @@ const Index = () => {
             </div>
           )}
           {activeTab === 'chat' && <ChatContainer />}
+          {activeTab === 'settings' && (
+            <div className="container max-w-2xl mx-auto py-6 px-4">
+              <CanvasSettings />
+            </div>
+          )}
         </main>
       </div>
     </>
